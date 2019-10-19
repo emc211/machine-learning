@@ -23,10 +23,16 @@ class Task():
         self.action_high = 900
         self.action_size = 4
 
-        # Goal
-        self.target_pos = target_pos if target_pos is not None else np.array([0., 0., 10.]) 
+        # Goal  
+        #self.target_pos = target_pos if target_pos is not None else np.array([0., 0., 10.]) 
+		# Change goal to make it attempt to land at 0 0 0
+        self.target_pos = np.array([0., 0., 0.])
 
     def get_reward(self):
+		#if y parameter falls below zero RL has crashed so return negative reward
+        if (self.sim.pose[1] < 0):
+            return -1.
+
         """Uses current pose of sim to return reward."""
         reward = 1.-.3*(abs(self.sim.pose[:3] - self.target_pos)).sum()
         return reward
