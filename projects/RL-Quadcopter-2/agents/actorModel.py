@@ -30,11 +30,11 @@ class Actor:
         states = layers.Input(shape=(self.state_size,), name='states')
 
         # Add hidden layers
-        net = layers.Dense(units=32, activation='relu')(states)
-        net = layers.Dense(units=64, activation='relu')(net)
-        net = layers.Dense(units=32, activation='relu')(net)
-
-        #TODO Try different layer sizes, activations, add batch normalization, regularizers, etc.
+        net = layers.Dense(units=32, activation='relu', kernel_initializer='glorot_normal')(states)
+		net = layers.BatchNormalization()(net)
+		net = layers.LeakyReLU(1e-2)(net)
+        net = layers.Dense(units=64, activation='relu',kernel_initializer='glorot_normal')(net)
+        net = layers.Dense(units=32, activation='relu',kernel_initializer='glorot_normal')(net)
 
         # Add final output layer with sigmoid activation
         raw_actions = layers.Dense(units=self.action_size, activation='sigmoid',
